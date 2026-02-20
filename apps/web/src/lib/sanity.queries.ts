@@ -44,8 +44,41 @@ export const pageBySlugQuery = groq`
                 ...,
                 members[]->{ _id, name, role, bio, photo }
             },
+            _type == "packagesSection" => {
+                ...,
+                packages[]->{ _id, title, slug, priceLabel, summary, image }
+            },
         },
         seo,
+    }
+`
+
+/* ── Packages ── */
+export const allPackagesQuery = groq`
+    *[_type == "package"] | order(title asc){
+        _id,
+        title,
+        slug,
+        priceLabel,
+        summary,
+        image,
+        ctaText,
+        ctaLink,
+    }
+`
+
+export const packageBySlugQuery = groq`
+    *[_type == "package" && slug.current == $packageid][0]{
+        _id,
+        title,
+        slug,
+        priceLabel,
+        summary,
+        description,
+        bulletPoints,
+        image,
+        ctaText,
+        ctaLink,
     }
 `
 

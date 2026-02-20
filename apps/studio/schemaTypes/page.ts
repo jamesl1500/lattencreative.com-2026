@@ -41,6 +41,11 @@ export default {
                 { type: 'teamSection' },
                 { type: 'statsSection' },
                 { type: 'contactSection' },
+                { type: 'textSection' },
+                { type: 'textListSection' },
+                { type: 'textImageSection' },
+                { type: 'textCtaSection' },
+                { type: 'packagesSection' },
             ],
         },
         {

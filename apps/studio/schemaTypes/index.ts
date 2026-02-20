@@ -13,6 +13,12 @@ import projectsSection from './projectsSection'
 import teamSection from './teamSection'
 import statsSection from './statsSection'
 import contactSection from './contactSection'
+import textSection from './textSection'
+import textListSection from './textListSection'
+import textImageSection from './textImageSection'
+import textCtaSection from './textCtaSection'
+import packageSchema from './package'
+import packagesSection from './packagesSection'
 
 export const schemaTypes = [
     // Singletons
@@ -23,6 +29,7 @@ export const schemaTypes = [
     project,
     teamMember,
     post,
+    packageSchema,
     // Section objects (used inside page.content)
     hero,
     features,
@@ -33,4 +40,9 @@ export const schemaTypes = [
     teamSection,
     statsSection,
     contactSection,
+    textSection,
+    textListSection,
+    textImageSection,
+    textCtaSection,
+    packagesSection,
 ]

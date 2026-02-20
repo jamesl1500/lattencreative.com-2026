@@ -22,6 +22,47 @@
   border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
+.bgWhite {
+  background: $color-bg;
+}
+
+.bgLightGray {
+  background: $color-surface-alt;
+}
+
+.bgDarkGray {
+  background: $color-fg;
+
+  .heading,
+  .body {
+    color: #fff;
+  }
+
+  .btnSecondary {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.bgPrimary {
+  background: $color-accent;
+
+  .heading,
+  .body {
+    color: #fff;
+  }
+
+  .btnPrimary {
+    background: #fff;
+    color: $color-accent;
+  }
+
+  .btnSecondary {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+}
+
 .container {
   max-width: $max-width;
   margin: 0 auto;
@@ -78,6 +119,65 @@
   font-size: 1rem;
   max-width: 42rem;
   margin: 1.25rem auto 0;
+}
+
+.textContentWrap {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.bulletList {
+  margin: 1.5rem 0 0;
+  padding-left: 1.25rem;
+  color: $color-muted;
+  line-height: 1.75;
+
+  li + li {
+    margin-top: 0.5rem;
+  }
+}
+
+.textImageGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.imageLeft {
+  .textImageMedia {
+    order: 1;
+  }
+
+  .textContentWrap {
+    order: 2;
+  }
+}
+
+.imageRight {
+  .textContentWrap {
+    order: 1;
+  }
+
+  .textImageMedia {
+    order: 2;
+  }
+}
+
+.textImageMedia {
+  width: 100%;
+}
+
+.textImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
 }
 
 /* ─── Buttons ─── */

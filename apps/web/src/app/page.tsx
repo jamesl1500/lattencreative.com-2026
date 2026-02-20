@@ -19,6 +19,11 @@ import ProjectsSection from '@/components/sections/ProjectsSection'
 import TeamSection from '@/components/sections/TeamSection'
 import StatsSection from '@/components/sections/StatsSection'
 import ContactSection from '@/components/sections/ContactSection'
+import TextSection from '@/components/sections/TextSection'
+import TextListSection from '@/components/sections/TextListSection'
+import TextImageSection from '@/components/sections/TextImageSection'
+import TextCtaSection from '@/components/sections/TextCtaSection'
+import PackagesSection from '@/components/sections/PackagesSection'
 
 type PageSection = {
     _type: string
@@ -52,6 +57,16 @@ function renderSection(section: PageSection, i: number) {
             return <StatsSection key={key} {...section} />
         case 'contactSection':
             return <ContactSection key={key} {...section} />
+        case 'textSection':
+            return <TextSection key={key} {...section} />
+        case 'textListSection':
+            return <TextListSection key={key} {...section} />
+        case 'textImageSection':
+            return <TextImageSection key={key} {...section} />
+        case 'textCtaSection':
+            return <TextCtaSection key={key} {...section} />
+        case 'packagesSection':
+            return <PackagesSection key={key} {...section} />
         default:
             return null
     }
