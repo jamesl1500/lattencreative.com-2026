@@ -1,0 +1,702 @@
+@use '../../styles/variables' as *;
+
+/* ═══════════════════════════════════════════════
+   SECTIONS — Light & Fancy Theme
+   ═══════════════════════════════════════════════ */
+
+/* ─── Shared Section Layout ─── */
+.section {
+  padding: 6rem 1.5rem;
+  position: relative;
+  background: $color-bg;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+
+  @media (max-width: 768px) {
+    padding: 4rem 1rem;
+  }
+}
+
+.sectionAlt {
+  @extend .section;
+  background: #eee;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.container {
+  max-width: $max-width;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sectionHeader {
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto 4rem;
+}
+
+.sectionTag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: $color-accent;
+  background: $color-accent-light;
+  padding: 0.35rem 1rem;
+  border-radius: $radius-full;
+  margin-bottom: 1rem;
+}
+
+/* ─── Typography ─── */
+.heading {
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  margin-bottom: 1rem;
+  color: $color-fg;
+  text-wrap: balance;
+}
+
+.headingLg {
+  @extend .heading;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+}
+
+.subheading {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: $color-muted;
+  max-width: 40rem;
+  margin: 0 auto;
+  text-wrap: pretty;
+}
+
+.body {
+  color: $color-muted;
+  line-height: 1.75;
+  font-size: 1rem;
+  max-width: 42rem;
+  margin: 1.25rem auto 0;
+}
+
+/* ─── Buttons ─── */
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 0.85rem 2.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: $radius-full;
+  background: $color-accent;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba($color-accent, 0.25);
+  transition: background $transition, transform $transition, box-shadow $transition;
+
+  &:hover {
+    background: $color-accent-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($color-accent, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 0.85rem 2.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: $radius-full;
+  background: transparent;
+  border: 1.5px solid $color-border;
+  color: $color-fg;
+  cursor: pointer;
+  transition: background $transition, border-color $transition, transform $transition;
+
+  &:hover {
+    background: $color-surface-alt;
+    border-color: rgba($color-accent, 0.3);
+    transform: translateY(-2px);
+  }
+}
+
+.btnGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  justify-content: center;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    .btnPrimary, .btnSecondary {
+      width: 100%;
+      max-width: 20rem;
+    }
+  }
+}
+
+/* ─── Grids ─── */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .grid4 { grid-template-columns: repeat(2, 1fr); }
+  .grid3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+}
+
+/* ─── Card ─── */
+.card {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: 2rem;
+  box-shadow: 0 1px 3px $color-shadow, 0 4px 16px $color-shadow;
+  transition: border-color $transition, transform $transition, box-shadow $transition;
+
+  &:hover {
+    border-color: rgba($color-accent, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px $color-shadow-md;
+  }
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  background: $color-accent-light;
+  border-radius: $radius-md;
+  color: $color-accent;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: $color-fg;
+}
+
+.cardBody {
+  font-size: 0.925rem;
+  line-height: 1.65;
+  color: $color-muted;
+}
+
+/* ═══════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════ */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8rem 1.5rem 5rem;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    170deg,
+    #f8f7ff 0%,
+    $color-bg 40%,
+    #eef2ff 100%
+  );
+
+  @media (max-width: 768px) {
+    padding: 7rem 1rem 3.5rem;
+  }
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.7),
+      rgba(250, 250, 250, 0.92)
+    );
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  max-width: 52rem;
+}
+
+/* ── Height Variants ── */
+.heroSmall {
+  min-height: 50vh;
+  padding-top: 7rem;
+  padding-bottom: 3.5rem;
+
+  @media (max-width: 768px) {
+    min-height: 40vh;
+    padding-top: 6rem;
+    padding-bottom: 2.5rem;
+  }
+}
+
+.heroMedium {
+  min-height: 75vh;
+
+  @media (max-width: 768px) {
+    min-height: 60vh;
+  }
+}
+
+.heroLarge {
+  min-height: 92vh;
+
+  @media (max-width: 768px) {
+    min-height: 80vh;
+  }
+}
+
+.heroExtraLarge {
+  min-height: 100vh;
+
+  @media (max-width: 768px) {
+    min-height: 90vh;
+  }
+}
+
+.heroCover {
+  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport height for mobile */
+}
+
+/* ── Structure Variants ── */
+.heroDefault {
+  /* standard centered hero — no special overrides */
+}
+
+.heroCentered {
+  .heroContent {
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+  .headingLg {
+    font-size: clamp(2.75rem, 6.5vw, 4.5rem);
+  }
+}
+
+.heroSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  text-align: left;
+  max-width: $max-width;
+  margin: 0 auto;
+  background: $color-bg;
+
+  .heroContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .subheading {
+      margin: 1.25rem 0 0;
+    }
+  }
+
+  .btnGroup {
+    justify-content: flex-start;
+  }
+
+  /* Hide the full-bleed background in split mode */
+  .heroBg {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+
+    .heroContent {
+      order: 2;
+    }
+
+    .btnGroup {
+      justify-content: center;
+    }
+  }
+}
+
+.heroSplitImage {
+  position: relative;
+  z-index: 2;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: 0 8px 40px $color-shadow-md;
+
+  @media (max-width: 768px) {
+    order: 1;
+  }
+}
+
+/* ── Alignment Variants ── */
+.heroLeft {
+  text-align: left;
+  justify-content: flex-start;
+
+  .heroContent {
+    margin-right: auto;
+    margin-left: clamp(1rem, 5vw, 6rem);
+  }
+
+  .btnGroup {
+    justify-content: flex-start;
+  }
+}
+
+.heroRight {
+  text-align: right;
+  justify-content: flex-end;
+
+  .heroContent {
+    margin-left: auto;
+    margin-right: clamp(1rem, 5vw, 6rem);
+  }
+
+  .btnGroup {
+    justify-content: flex-end;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   STATS
+   ═══════════════════════════════════════════════ */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2rem;
+  text-align: center;
+}
+
+.statValue {
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, $color-accent, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: $color-muted;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════
+   TESTIMONIALS
+   ═══════════════════════════════════════════════ */
+.testimonialCard {
+  @extend .card;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.quote {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: $color-fg;
+  font-style: italic;
+  position: relative;
+  padding-left: 1.25rem;
+  border-left: 3px solid $color-accent;
+
+  &::before {
+    content: '\201C';
+    color: $color-accent;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    position: absolute;
+    top: -0.25rem;
+    left: -0.75rem;
+    opacity: 0;
+  }
+}
+
+.testimonialAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.authorPhoto {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid $color-accent-light;
+}
+
+.authorName {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: $color-fg;
+}
+
+.authorMeta {
+  font-size: 0.8rem;
+  color: $color-muted;
+}
+
+/* ═══════════════════════════════════════════════
+   PROJECT CARD
+   ═══════════════════════════════════════════════ */
+.projectCard {
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  box-shadow: 0 1px 3px $color-shadow;
+  transition: border-color $transition, transform $transition, box-shadow $transition;
+
+  &:hover {
+    border-color: rgba($color-accent, 0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px $color-shadow-md;
+
+    .projectImg {
+      transform: scale(1.03);
+    }
+  }
+}
+
+.projectImg {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+  transition: transform $transition;
+}
+
+.projectInfo {
+  padding: 1.5rem 1.75rem;
+}
+
+.projectClient {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: $color-accent;
+  margin-bottom: 0.35rem;
+}
+
+.projectTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: $color-fg;
+  margin-bottom: 0.5rem;
+}
+
+.projectExcerpt {
+  font-size: 0.9rem;
+  color: $color-muted;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════
+   TEAM CARD
+   ═══════════════════════════════════════════════ */
+.teamCard {
+  text-align: center;
+  transition: transform $transition;
+
+  &:hover {
+    transform: translateY(-4px);
+
+    .teamPhoto {
+      box-shadow: 0 8px 30px $color-shadow-md;
+    }
+  }
+}
+
+.teamPhoto {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: $radius-xl;
+  margin-bottom: 1.25rem;
+  border: 1px solid $color-border;
+  box-shadow: 0 2px 12px $color-shadow;
+  transition: box-shadow $transition;
+}
+
+.teamName {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: $color-fg;
+  margin-bottom: 0.2rem;
+}
+
+.teamRole {
+  font-size: 0.85rem;
+  color: $color-accent;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════
+   CONTACT
+   ═══════════════════════════════════════════════ */
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+  background: #fff;
+  padding: 3rem;
+  border-radius: $radius-lg;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input, .textarea {
+  width: 100%;
+  background: $color-bg;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  padding: 0.85rem 1.125rem;
+  font-size: 0.925rem;
+  color: $color-fg;
+  font-family: $font-sans;
+  transition: border-color $transition, box-shadow $transition;
+
+  &::placeholder {
+    color: lighten($color-muted, 10%);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent;
+    box-shadow: 0 0 0 3px rgba($color-accent, 0.1);
+  }
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 9rem;
+}
+
+/* ═══════════════════════════════════════════════
+   CTA BANNER
+   ═══════════════════════════════════════════════ */
+.ctaBanner {
+  text-align: center;
+  padding: 5.5rem 1.5rem;
+  background: $color-surface-alt;
+  border-top: 1px solid $color-border;
+  border-bottom: 1px solid $color-border;
+
+  @media (max-width: 768px) {
+    padding: 4rem 1rem;
+  }
+}
+
+.ctaAccent {
+  background: linear-gradient(135deg, $color-accent, #818cf8);
+  color: #fff;
+  border-color: transparent;
+
+  .heading {
+    color: #fff;
+  }
+  .subheading {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .btnPrimary {
+    background: #fff;
+    color: $color-accent;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+
+    &:hover {
+      background: #f0f0ff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+  }
+}
+
+.ctaDark {
+  background: $color-fg;
+  border-color: transparent;
+
+  .heading {
+    color: #fff;
+  }
+  .subheading {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .btnPrimary {
+    background: $color-accent;
+    color: #fff;
+  }
+}

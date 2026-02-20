@@ -1,0 +1,117 @@
+@use 'variables' as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px) saturate(1.4);
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid $color-border;
+  transition: box-shadow $transition;
+
+  &:hover {
+    box-shadow: 0 1px 8px $color-shadow;
+  }
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
+
+  @media (max-width: 480px) {
+    padding: 0.85rem 1rem;
+  }
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: $color-fg;
+
+  span {
+    color: $color-accent;
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.navLink {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $color-muted;
+  transition: color $transition;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: $color-accent;
+    border-radius: 1px;
+    transition: width $transition;
+  }
+
+  &:hover {
+    color: $color-fg;
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+.ctaBtn {
+  font-size: 0.8rem;
+  padding: 0.5rem 1.35rem;
+  border-radius: $radius-full;
+  background: $color-accent;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba($color-accent, 0.2);
+  transition: background $transition, box-shadow $transition, transform $transition;
+
+  &:hover {
+    background: $color-accent-hover;
+    box-shadow: 0 4px 14px rgba($color-accent, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+.mobileToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: $color-fg;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: $radius-sm;
+  transition: background $transition;
+
+  &:hover {
+    background: $color-surface-alt;
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

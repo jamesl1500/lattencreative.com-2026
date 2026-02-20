@@ -1,0 +1,31 @@
+// ── Design tokens & variables ──
+// Light, airy palette with refined accent
+$color-bg: #fafafa;
+$color-fg: #1a1a2e;
+$color-muted: #6b7280;
+$color-accent: #6366f1;
+$color-accent-hover: #4f46e5;
+$color-accent-light: rgba(99, 102, 241, 0.08);
+$color-surface: #ffffff;
+$color-surface-alt: #f3f4f6;
+$color-border: rgba(0, 0, 0, 0.06);
+$color-shadow: rgba(0, 0, 0, 0.04);
+$color-shadow-md: rgba(0, 0, 0, 0.08);
+
+// Fonts
+$font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+$font-mono: var(--font-geist-mono), monospace;
+
+// Radii
+$radius-xs: 0.25rem;
+$radius-sm: 0.5rem;
+$radius-md: 0.875rem;
+$radius-lg: 1.25rem;
+$radius-xl: 1.5rem;
+$radius-full: 9999px;
+
+// Layout
+$max-width: 76rem;
+$transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-fast: 0.15s ease;
+
