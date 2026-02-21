@@ -4,7 +4,6 @@
       "build": {
         "dependsOn": ["^build"],
         "outputs": [".next/**", "dist/**"],
-        "parallel": false
       },
       "dev": {
         "cache": false
