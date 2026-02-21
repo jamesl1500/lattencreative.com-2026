@@ -8,6 +8,7 @@
  * @license MIT
  * @see {@link https://lattencreative.com}
  */
+import type { Metadata } from 'next'
 import { client } from '@/lib/sanity.client'
 import { pageBySlugQuery } from '@/lib/sanity.queries'
 import { notFound } from 'next/navigation'
@@ -34,7 +35,22 @@ type PageSection = {
 
 type DynamicPage = {
     title?: string
+    seo?: { title?: string; description?: string }
     content?: PageSection[]
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+    const { slug } = await params
+    const page = await client.fetch<DynamicPage | null>(pageBySlugQuery, { slug })
+
+    return {
+        title: page?.seo?.title || page?.title || slug,
+        description: page?.seo?.description || undefined,
+    }
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {

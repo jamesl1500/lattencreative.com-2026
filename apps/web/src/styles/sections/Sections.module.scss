@@ -747,6 +747,38 @@
 }
 
 /* ═══════════════════════════════════════════════
+   Package
+   ═══════════════════════════════════════════════ */
+.bulletPointsSection {
+  margin-top: 2rem;
+}
+
+.idealForSection {
+  margin-top: 2rem;
+}
+
+.metaInfoGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.bulletPointsSection h4 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: $color-fg;
+  margin-bottom: 0.75rem;
+}
+
+.idealForSection h4 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: $color-fg;
+  margin-bottom: 0.75rem;
+}
+
+/* ═══════════════════════════════════════════════
    CTA BANNER
    ═══════════════════════════════════════════════ */
 .ctaBanner {

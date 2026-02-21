@@ -23,7 +23,22 @@ export default defineType({
             name: 'priceLabel',
             title: 'Price Label',
             type: 'string',
-            description: 'Example: "$1,500" or "Starting at $2,500"',
+            description: 'Display text, e.g. "$1,500" or "Starting at $2,500"',
+        }),
+        defineField({
+            name: 'price',
+            title: 'Price (cents)',
+            type: 'number',
+            description: 'The actual price in cents. E.g. 150000 = $1,500.00',
+            validation: (rule) => rule.required().min(0),
+        }),
+        defineField({
+            name: 'depositPercent',
+            title: 'Deposit %',
+            type: 'number',
+            description: 'Percentage of price required as deposit (default 50)',
+            initialValue: 50,
+            validation: (rule) => rule.min(1).max(100),
         }),
         defineField({
             name: 'summary',
@@ -44,6 +59,13 @@ export default defineType({
             title: 'What is Included',
             type: 'array',
             of: [{ type: 'string' }],
+        }),
+        defineField({
+            name: 'idealFor',
+            title: 'Ideal For',
+            type: 'array',
+            of: [{ type: 'string' }],
+            description: 'Describe the ideal client or project for this package.',
         }),
         defineField({
             name: 'image',
