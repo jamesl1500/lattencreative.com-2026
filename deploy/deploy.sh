@@ -22,27 +22,42 @@ echo "→ Pulling latest code..."
 git fetch origin
 git reset --hard "origin/$BRANCH"
 
-# ─── 2. Install dependencies ───
+# ─── 2. Check disk space ───
+AVAIL_MB=$(df -m "$APP_DIR" | awk 'NR==2 {print $4}')
+echo "→ Available disk space: ${AVAIL_MB}MB"
+if [ "$AVAIL_MB" -lt 2000 ]; then
+    echo "⚠  Low disk space! Cleaning up..."
+    npm cache clean --force
+    rm -rf node_modules/.cache
+fi
+
+# ─── 3. Clean previous build artifacts ───
+echo "→ Cleaning old builds..."
+rm -rf apps/web/.next
+rm -rf apps/dashboard/.next
+rm -rf apps/studio/dist
+rm -rf node_modules/.cache/turbo
+
+# ─── 4. Install dependencies ───
 echo "→ Installing dependencies..."
 npm install --production=false
 
-# ─── 3. Build all apps with Turbo ───
-# Limit Node heap to 512MB and build one app at a time to avoid OOM
+# ─── 5. Build all apps with Turbo ───
 echo "→ Building apps..."
-NODE_OPTIONS="--max-old-space-size=512" npx turbo build --concurrency=1
+npx turbo build --concurrency=1
 
-# ─── 4. Build Sanity Studio (static files) ───
+# ─── 6. Build Sanity Studio (static files) ───
 echo "→ Building Sanity Studio..."
 cd apps/studio
 npx sanity build
 cd "$APP_DIR"
 
-# ─── 5. Sync Nginx configs (in case they changed) ───
+# ─── 7. Sync Nginx configs (in case they changed) ───
 echo "→ Syncing Nginx configs..."
 cp deploy/nginx/*.conf /etc/nginx/sites-available/ 2>/dev/null || true
 nginx -t && systemctl reload nginx
 
-# ─── 6. Restart PM2 apps ───
+# ─── 8. Restart PM2 apps ───
 echo "→ Restarting apps..."
 if pm2 describe latten-web &>/dev/null; then
     pm2 restart deploy/ecosystem.config.cjs
