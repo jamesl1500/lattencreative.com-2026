@@ -8,7 +8,7 @@
 set -euo pipefail
 
 APP_DIR="/var/www/lattencreative"
-BRANCH="${1:-main}"
+BRANCH="${1:-master}"
 
 echo "══════════════════════════════════════"
 echo "  Deploying Latten Creative"
