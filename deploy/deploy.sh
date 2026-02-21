@@ -27,8 +27,9 @@ echo "→ Installing dependencies..."
 npm install --production=false
 
 # ─── 3. Build all apps with Turbo ───
+# Limit Node heap to 512MB and build one app at a time to avoid OOM
 echo "→ Building apps..."
-npx turbo build
+NODE_OPTIONS="--max-old-space-size=512" npx turbo build --concurrency=1
 
 # ─── 4. Build Sanity Studio (static files) ───
 echo "→ Building Sanity Studio..."

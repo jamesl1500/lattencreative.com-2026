@@ -44,12 +44,25 @@ apt-get install -y certbot python3-certbot-nginx
 echo "→ Installing Git..."
 apt-get install -y git
 
-# ─── 7. Create app directory ───
+# ─── 7. Create swap space (2GB) for builds ───
+if [ ! -f /swapfile ]; then
+    echo "→ Creating 2GB swap file..."
+    fallocate -l 2G /swapfile
+    chmod 600 /swapfile
+    mkswap /swapfile
+    swapon /swapfile
+    echo '/swapfile none swap sw 0 0' >> /etc/fstab
+    echo "  Swap enabled (2GB)"
+else
+    echo "→ Swap already exists, skipping."
+fi
+
+# ─── 8. Create app directory ───
 echo "→ Creating /var/www/lattencreative..."
 mkdir -p /var/www/lattencreative
 mkdir -p /var/log/pm2
 
-# ─── 8. Firewall (UFW) ───
+# ─── 9. Firewall (UFW) ───
 echo "→ Configuring firewall..."
 ufw allow OpenSSH
 ufw allow 'Nginx Full'
