@@ -14,11 +14,13 @@ import { postBySlugQuery } from '@/lib/sanity.queries'
 import { urlFor } from '@/lib/sanity.image'
 import styles from '@/styles/sections/Blog.module.scss'
 
+import type { PortableTextBlock } from '@portabletext/types'
+
 type PostDetail = {
     title: string
     slug: { current: string }
     excerpt?: string
-    body?: unknown[]
+    body?: PortableTextBlock[]
     coverImage?: { asset?: { _ref: string }; alt?: string }
     publishedAt: string
     tags?: string[]

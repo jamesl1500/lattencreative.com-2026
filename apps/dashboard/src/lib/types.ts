@@ -3,8 +3,9 @@ export interface Booking {
   id: string;
   customer_name: string;
   customer_email: string;
-  phone: string;
-  company: string | null;
+  customer_phone: string;
+  company_name: string | null;
+  current_website: string | null;
   package_id: string | null;
   package_title: string | null;
   package_price: number | null;
@@ -12,6 +13,7 @@ export interface Booking {
   deposit_amount: number | null;
   preferred_date: string | null;
   preferred_time: string | null;
+  project_goals: string | null;
   project_description: string | null;
   budget_range: string | null;
   timeline: string | null;

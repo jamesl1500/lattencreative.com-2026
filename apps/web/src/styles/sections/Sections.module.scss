@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../../styles/variables' as *;
 
 /* ═══════════════════════════════════════════════
@@ -731,7 +732,7 @@
   transition: border-color $transition, box-shadow $transition;
 
   &::placeholder {
-    color: lighten($color-muted, 10%);
+    color: color.adjust($color-muted, $lightness: 10%);
   }
 
   &:focus {

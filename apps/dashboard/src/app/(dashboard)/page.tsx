@@ -66,9 +66,9 @@ export default async function OverviewPage() {
                 >
                   <div>
                     <p className="text-sm font-medium text-foreground">
-                      {booking.first_name} {booking.last_name}
+                      {booking.customer_name}
                     </p>
-                    <p className="text-xs text-muted-foreground">{booking.email}</p>
+                    <p className="text-xs text-muted-foreground">{booking.customer_email}</p>
                   </div>
                   <StatusBadge status={booking.status} />
                 </Link>
