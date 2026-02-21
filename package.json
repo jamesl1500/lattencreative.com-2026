@@ -1,6 +1,7 @@
 {
 	"name": "lattencreative-com-2026",
 	"private": true,
+	"packageManager": "npm@11.6.1",
 	"workspaces": [
 		"apps/*",
 		"packages/*"
