@@ -4,11 +4,11 @@
       "build": {
         "dependsOn": ["^build"],
         "outputs": [".next/**", "dist/**"],
+        "env": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"]
       },
       "dev": {
         "cache": false
       },
-      "lint": {},
-      "env": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"]
+      "lint": {}
     }
   }
