@@ -8,6 +8,7 @@
       "dev": {
         "cache": false
       },
-      "lint": {}
+      "lint": {},
+      "env": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"]
     }
   }

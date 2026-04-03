@@ -26,6 +26,7 @@ import TextListSection from '@/components/sections/TextListSection'
 import TextImageSection from '@/components/sections/TextImageSection'
 import TextCtaSection from '@/components/sections/TextCtaSection'
 import PackagesSection from '@/components/sections/PackagesSection'
+import CoverImageSection from '@/components/sections/CoverImageSection'
 
 type PageSection = {
     _type: string
@@ -94,6 +95,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
                         return <TextCtaSection key={key} {...section} />
                     case 'packagesSection':
                         return <PackagesSection key={key} {...section} />
+                    case 'coverImageSection':
+                        return <CoverImageSection key={key} {...section} />
                     default:
                         return null
                 }

@@ -19,6 +19,7 @@ import textImageSection from './textImageSection'
 import textCtaSection from './textCtaSection'
 import packageSchema from './package'
 import packagesSection from './packagesSection'
+import coverImageSection from './coverImageSection'
 
 export const schemaTypes = [
     // Singletons
@@ -45,4 +46,5 @@ export const schemaTypes = [
     textImageSection,
     textCtaSection,
     packagesSection,
+    coverImageSection,
 ]

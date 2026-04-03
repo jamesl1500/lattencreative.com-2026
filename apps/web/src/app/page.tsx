@@ -96,7 +96,7 @@ export default async function Home() {
                 ctaText="Start a Project"
                 ctaLink="#contact"
                 secondaryCtaText="View Our Work"
-                secondaryCtaLink="#projects"
+                secondaryCtaLink="/projects"
                 alignment="center"
                 backgroundImage={{
                     asset: { _ref: 'https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },

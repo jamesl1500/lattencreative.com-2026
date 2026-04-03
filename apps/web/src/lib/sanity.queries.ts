@@ -105,6 +105,22 @@ export const featuredProjectsQuery = groq`
     }
 `
 
+export const projectBySlugQuery = groq`
+    *[_type == "project" && slug.current == $slug][0]{
+        title,
+        slug,
+        client,
+        excerpt,
+        body,
+        thumbnail,
+        images,
+        services[]->{ _id, title, slug, icon },
+        url,
+        featured,
+        publishedAt,
+    }
+`
+
 /* ── Team ── */
 export const allTeamQuery = groq`
     *[_type == "teamMember"] | order(order asc){

@@ -1,0 +1,341 @@
+@use '../variables' as *;
+
+/* ═══════════════════════════════════════════════
+   Project Detail Page
+   ═══════════════════════════════════════════════ */
+
+.projectPage {
+  padding: 6rem 1.5rem 4rem;
+  background: $color-bg;
+  min-height: 100vh;
+
+  @media (max-width: 768px) {
+    padding: 4rem 1rem 3rem;
+  }
+}
+
+.projectContainer {
+  max-width: $max-width;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ─── Back Link ─── */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $color-muted;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-accent;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ─── Header ─── */
+.header {
+  margin-bottom: 2.5rem;
+}
+
+.client {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-accent;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: $color-fg;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.excerpt {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: $color-muted;
+  max-width: 42rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.75rem;
+  font-size: 0.85rem;
+  color: $color-muted;
+}
+
+.date {
+  font-weight: 500;
+}
+
+.liveLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: $color-accent;
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-accent-hover;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* ─── Thumbnail / Hero Image ─── */
+.thumbnail {
+  border-radius: $radius-lg;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  border: 1px solid $color-border;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* ─── Services Tags ─── */
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 2.5rem;
+}
+
+.serviceTag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $color-accent;
+  background: $color-accent-light;
+  padding: 0.3rem 0.75rem;
+  border-radius: $radius-full;
+  text-decoration: none;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: rgba(99, 102, 241, 0.14);
+  }
+}
+
+/* ─── Body (Portable Text) ─── */
+.body {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: $color-fg;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    color: $color-fg;
+  }
+
+  h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    color: $color-fg;
+  }
+
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    color: $color-fg;
+  }
+
+  p {
+    margin-bottom: 1.5rem;
+    color: $color-muted;
+  }
+
+  a {
+    color: $color-accent;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-accent-hover;
+    }
+  }
+
+  ul, ol {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    color: $color-muted;
+
+    li {
+      margin-bottom: 0.5rem;
+      line-height: 1.75;
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid $color-accent;
+    margin: 2rem 0;
+    padding: 1rem 1.5rem;
+    background: $color-accent-light;
+    border-radius: 0 $radius-md $radius-md 0;
+    font-style: italic;
+    color: $color-fg;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: $radius-md;
+    margin: 2rem 0;
+    border: 1px solid $color-border;
+  }
+
+  pre {
+    background: $color-fg;
+    color: #e5e7eb;
+    padding: 1.25rem 1.5rem;
+    border-radius: $radius-md;
+    overflow-x: auto;
+    margin: 2rem 0;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  code {
+    font-family: $font-mono;
+    font-size: 0.875em;
+    background: $color-surface-alt;
+    padding: 0.15em 0.4em;
+    border-radius: $radius-xs;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid $color-border;
+    margin: 3rem 0;
+  }
+}
+
+.imageCaption {
+  text-align: center;
+  font-size: 0.8rem;
+  color: $color-muted;
+  margin-top: -1.25rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+/* ─── Image Gallery ─── */
+.gallery {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.galleryHeading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: $color-fg;
+  margin-bottom: 1.25rem;
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.galleryImage {
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 1px solid $color-border;
+  aspect-ratio: 4 / 3;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* ─── CTA ─── */
+.cta {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid $color-border;
+  text-align: center;
+}
+
+.ctaText {
+  font-size: 1rem;
+  color: $color-muted;
+  margin-bottom: 1rem;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: $color-accent;
+  color: #fff;
+  padding: 0.75rem 1.75rem;
+  border-radius: $radius-full;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-accent-hover;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}

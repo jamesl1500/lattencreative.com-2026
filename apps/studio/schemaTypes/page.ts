@@ -46,6 +46,7 @@ export default {
                 { type: 'textImageSection' },
                 { type: 'textCtaSection' },
                 { type: 'packagesSection' },
+                { type: 'coverImageSection' },
             ],
         },
         {
