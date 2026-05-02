@@ -20,13 +20,13 @@ export default function BookingCancelledPage() {
 
                 <h1 className={styles.resultTitle}>Payment Cancelled</h1>
                 <p className={styles.resultText}>
-                    No worries — your payment was not processed and you have not been 
-                    charged. Your booking is saved and you can always come back to 
-                    complete the deposit when you are ready.
+                    No payment was processed and you were not charged.
+                    Your booking details are still saved, so you can return anytime
+                    to complete checkout when you are ready.
                 </p>
 
-                <Link href="/" className={styles.resultBtn}>
-                    Back to Home
+                <Link href="/packages" className={styles.resultBtn}>
+                    Back to Packages
                 </Link>
             </div>
         </div>

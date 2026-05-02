@@ -16,15 +16,15 @@ export default function BookingSuccessPage() {
                     </svg>
                 </div>
 
-                <h1 className={styles.resultTitle}>You are All Set!</h1>
+                <h1 className={styles.resultTitle}>Booking Confirmed</h1>
                 <p className={styles.resultText}>
-                    Your deposit has been received and your booking is confirmed. 
-                    We have sent a confirmation email with your meeting details and 
-                    a calendar invite. Looking forward to speaking with you!
+                    Your deposit has been received and your call is locked in.
+                    We sent your confirmation email and calendar invite, and our team
+                    will come prepared with your package details and project notes.
                 </p>
 
-                <Link href="/" className={styles.resultBtn}>
-                    Back to Home
+                <Link href="/packages" className={styles.resultBtn}>
+                    View More Packages
                 </Link>
             </div>
         </div>

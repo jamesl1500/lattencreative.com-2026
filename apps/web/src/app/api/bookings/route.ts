@@ -12,10 +12,7 @@ interface BookingPayload {
     customerEmail: string
     customerPhone?: string
     companyName?: string
-    packageSlug: string
-    packageTitle: string
-    packagePrice: number      // in cents
-    depositAmount: number     // in cents
+    packageId: string
     calendlyEventUri: string  // e.g. https://api.calendly.com/scheduled_events/UUID
     calendlyInviteeUri: string
     projectDescription: string
@@ -28,16 +25,35 @@ export async function POST(req: NextRequest) {
         const body: BookingPayload = await req.json()
 
         // Basic validation
-        if (!body.customerName || !body.customerEmail || !body.packageSlug || !body.calendlyEventUri) {
+        if (!body.customerName || !body.customerEmail || !body.packageId || !body.calendlyEventUri) {
             return NextResponse.json(
-                { error: 'Missing required fields: customerName, customerEmail, packageSlug, calendlyEventUri' },
+                { error: 'Missing required fields: customerName, customerEmail, packageId, calendlyEventUri' },
                 { status: 400 }
             )
         }
 
-        if (!body.packagePrice || body.packagePrice <= 0) {
+        // Resolve package and derive authoritative pricing details.
+        const { data: pkgRow, error: pkgError } = await supabase
+            .from('packages')
+            .select('id, slug, title, price_exact, price_min, deposit_percent, is_active')
+            .eq('id', body.packageId)
+            .eq('is_active', true)
+            .single()
+
+        if (pkgError || !pkgRow) {
             return NextResponse.json(
-                { error: 'Invalid package price' },
+                { error: 'Invalid package selection' },
+                { status: 400 }
+            )
+        }
+
+        const packagePrice = pkgRow.price_exact ?? pkgRow.price_min ?? 0
+        const depositPercent = Number(pkgRow.deposit_percent || 50)
+        const depositAmount = Math.round(packagePrice * (depositPercent / 100))
+
+        if (packagePrice <= 0 || depositPercent <= 0 || depositPercent > 100 || depositAmount <= 0) {
+            return NextResponse.json(
+                { error: 'Selected package is not currently bookable' },
                 { status: 400 }
             )
         }
@@ -49,10 +65,11 @@ export async function POST(req: NextRequest) {
                 customer_email: body.customerEmail,
                 customer_phone: body.customerPhone || null,
                 company_name: body.companyName || null,
-                package_slug: body.packageSlug,
-                package_title: body.packageTitle,
-                package_price: body.packagePrice,
-                deposit_amount: body.depositAmount,
+                package_id: pkgRow.id,
+                package_slug: pkgRow.slug,
+                package_title: pkgRow.title,
+                package_price: packagePrice,
+                deposit_amount: depositAmount,
                 calendly_event_uri: body.calendlyEventUri,
                 calendly_invitee_uri: body.calendlyInviteeUri || null,
                 project_description: body.projectDescription,

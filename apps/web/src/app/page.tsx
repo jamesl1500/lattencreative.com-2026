@@ -1,152 +1,121 @@
-/**
- * Homepage
- * ----
- * Fetches the "home" page from Sanity and renders all sections,
- * or shows a default hero if no CMS page exists yet.
- *
- * @module @latten/web/page
- * @author Latten Creative
- * @license MIT
- */
-import { client } from '@/lib/sanity.client'
-import { pageBySlugQuery, featuredProjectsQuery, allServicesQuery, allTeamQuery, siteSettingsQuery } from '@/lib/sanity.queries'
-import Hero from '@/components/sections/Hero'
-import Features from '@/components/sections/Features'
-import CTA from '@/components/sections/CTA'
-import Testimonials from '@/components/sections/Testimonials'
-import ServicesSection from '@/components/sections/ServicesSection'
-import ProjectsSection from '@/components/sections/ProjectsSection'
-import TeamSection from '@/components/sections/TeamSection'
-import StatsSection from '@/components/sections/StatsSection'
-import ContactSection from '@/components/sections/ContactSection'
-import TextSection from '@/components/sections/TextSection'
-import TextListSection from '@/components/sections/TextListSection'
-import TextImageSection from '@/components/sections/TextImageSection'
-import TextCtaSection from '@/components/sections/TextCtaSection'
-import PackagesSection from '@/components/sections/PackagesSection'
+import Link from 'next/link'
+import styles from '@/styles/HomeModern.module.scss'
+import { homeStats, processSteps, services, siteConfig, team } from '@/lib/site-content'
 
-type PageSection = {
-    _type: string
-    _key?: string
-    [key: string]: unknown
-}
-
-type SanityPage = {
-    title?: string
-    content?: PageSection[]
-}
-
-function renderSection(section: PageSection, i: number) {
-    const key = section._key ?? `${section._type}-${i}`
-    switch (section._type) {
-        case 'hero':
-            return <Hero key={key} {...section} />
-        case 'features':
-            return <Features key={key} {...section} />
-        case 'cta':
-            return <CTA key={key} {...section} />
-        case 'testimonials':
-            return <Testimonials key={key} {...section} />
-        case 'servicesSection':
-            return <ServicesSection key={key} {...section} />
-        case 'projectsSection':
-            return <ProjectsSection key={key} {...section} />
-        case 'teamSection':
-            return <TeamSection key={key} {...section} />
-        case 'statsSection':
-            return <StatsSection key={key} {...section} />
-        case 'contactSection':
-            return <ContactSection key={key} {...section} />
-        case 'textSection':
-            return <TextSection key={key} {...section} />
-        case 'textListSection':
-            return <TextListSection key={key} {...section} />
-        case 'textImageSection':
-            return <TextImageSection key={key} {...section} />
-        case 'textCtaSection':
-            return <TextCtaSection key={key} {...section} />
-        case 'packagesSection':
-            return <PackagesSection key={key} {...section} />
-        default:
-            return null
-    }
-}
-
-export default async function Home() {
-    const page = await client.fetch<SanityPage | null>(pageBySlugQuery, { slug: 'home' })
-
-    /* If a "home" page exists in Sanity, render its sections */
-    if (page?.content?.length) {
-        return <main>{page.content.map(renderSection)}</main>
-    }
-
-    /* Fallback: build a default homepage from individual queries */
-    const [services, projects, team, siteContent] = await Promise.all([
-        client.fetch(allServicesQuery),
-        client.fetch(featuredProjectsQuery),
-        client.fetch(allTeamQuery),
-        client.fetch(siteSettingsQuery),
-    ])
-
+export default function Home() {
     return (
-        <main>
-            <Hero
-                headline="We Design Digital Experiences That Matter"
-                subheadline="Latten Creative is a boutique web design studio crafting modern, high-performance websites and brands that connect."
-                ctaText="Start a Project"
-                ctaLink="#contact"
-                secondaryCtaText="View Our Work"
-                secondaryCtaLink="/projects"
-                alignment="center"
-                backgroundImage={{
-                    asset: { _ref: 'https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-                    alt: 'Creative workspace with laptop and design sketches',
-                }}
-            />
-            <StatsSection
-                headline="Proven Results"
-                items={[
-                    { value: '120+', label: 'Projects Delivered' },
-                    { value: '98%', label: 'Client Satisfaction' },
-                    { value: '8+', label: 'Years of Experience' },
-                    { value: '40+', label: 'Happy Clients' },
-                ]}
-            />
+        <main className={styles.page}>
+            <div className={styles.ambientGlow} />
 
-            <ServicesSection
-                headline="What We Do"
-                subtitle="End-to-end creative services to bring your vision to life."
-                services={services}
-            />
+            <section className={styles.hero}>
+                <div>
+                    <span className={styles.heroLabel}>Performance + Positioning</span>
+                    <h1>Web Systems Built To Convert, Not Just Impress</h1>
+                    <p>
+                        We design and engineer premium web experiences for service businesses that
+                        need sharper positioning, faster pages, and higher-quality leads.
+                    </p>
+                    <div className={styles.heroCtas}>
+                        <Link href="/packages" className={styles.primaryBtn}>Explore Packages</Link>
+                        <Link href="/services" className={styles.secondaryBtn}>View Services</Link>
+                    </div>
+                </div>
 
-            <ProjectsSection
-                headline="Featured Work"
-                subtitle="A selection of recent projects we are proud of."
-                projects={projects}
-            />
+                <div className={styles.heroPanel}>
+                    <div className={styles.panelCard}>
+                        <p className={styles.panelCardTitle}>Current Focus</p>
+                        <p className={styles.panelCardValue}>Lead Generation Webflows</p>
+                    </div>
+                    <div className={styles.panelCard}>
+                        <p className={styles.panelCardTitle}>Typical Engagement</p>
+                        <p className={styles.panelCardValue}>4-8 week delivery cycles</p>
+                    </div>
+                    <div className={styles.panelCard}>
+                        <p className={styles.panelCardTitle}>Best For</p>
+                        <p className={styles.panelCardValue}>Ambitious local and national brands</p>
+                    </div>
+                </div>
+            </section>
 
-            <TeamSection
-                headline="Meet the Team"
-                subtitle="The talented people behind every project."
-                members={team}
-            />
+            <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <span className={styles.sectionKicker}>Performance Benchmarks</span>
+                    <h2>Measured outcomes, not vague promises.</h2>
+                </div>
+                <div className={styles.statsGrid}>
+                    {homeStats.map((item) => (
+                        <article key={item.label} className={styles.card}>
+                            <div className={styles.statValue}>{item.value}</div>
+                            <p className={styles.statLabel}>{item.label}</p>
+                        </article>
+                    ))}
+                </div>
+            </section>
 
-            <CTA
-                headline="Ready to Elevate Your Brand?"
-                subtitle="Let's collaborate to create something extraordinary."
-                buttonText="Get in Touch"
-                buttonLink="#contact"
-                style="accent"
-            />
+            <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <span className={styles.sectionKicker}>Services</span>
+                    <h2>Strategy, design, and development in one streamlined team.</h2>
+                </div>
+                <div className={styles.servicesGrid}>
+                    {services.map((service) => (
+                        <article key={service.id} className={styles.card}>
+                            <h3>{service.title}</h3>
+                            <p>{service.summary}</p>
+                            <ul>
+                                {service.deliverables.map((deliverable) => (
+                                    <li key={deliverable}>{deliverable}</li>
+                                ))}
+                            </ul>
+                        </article>
+                    ))}
+                </div>
+            </section>
 
-            <ContactSection
-                headline="Start a Conversation"
-                subtitle="Tell us about your project and we'll get back to you within 24 hours."
-                showForm={true}
-                email={siteContent?.contactEmail}
-                phone={siteContent?.contactPhone}
-                address={siteContent?.address}
-            />
+            <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <span className={styles.sectionKicker}>Process</span>
+                    <h2>Clear phases, quick feedback loops, and predictable delivery.</h2>
+                </div>
+                <div className={styles.processGrid}>
+                    {processSteps.map((step) => (
+                        <article key={step.title} className={styles.card}>
+                            <h3>{step.title}</h3>
+                            <p>{step.description}</p>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
+            <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <span className={styles.sectionKicker}>Team</span>
+                    <h2>A compact senior team with hands-on execution.</h2>
+                </div>
+                <div className={styles.teamGrid}>
+                    {team.map((member) => (
+                        <article key={member.name} className={styles.card}>
+                            <h3>{member.name}</h3>
+                            <p><strong>{member.role}</strong></p>
+                            <p>{member.bio}</p>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
+            <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <span className={styles.sectionKicker}>Start</span>
+                    <h2>Ready to build your next growth engine?</h2>
+                    <p>Book a package or reach out directly and we will map the best path for your goals.</p>
+                </div>
+                <div className={styles.heroCtas}>
+                    <Link href="/packages" className={styles.primaryBtn}>Book A Package</Link>
+                    <Link href={`mailto:${siteConfig.contactEmail}`} className={styles.secondaryBtn}>
+                        {siteConfig.contactEmail}
+                    </Link>
+                </div>
+            </section>
         </main>
     )
 }

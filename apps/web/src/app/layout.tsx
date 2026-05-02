@@ -1,68 +1,48 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { client } from "@/lib/sanity.client";
-import { siteSettingsQuery } from "@/lib/sanity.queries";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { siteConfig } from "@/lib/site-content";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
 });
 
-type SiteSettings = {
-  siteName?: string;
-  logo?: unknown;
-  logoDark?: unknown;
-  navigation?: { label: string; href: string }[];
-  ctaButton?: { text?: string; link?: string };
-  footerText?: string;
-  socialLinks?: { platform: string; url: string }[];
-  contactEmail?: string;
-  contactPhone?: string;
-  address?: string;
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.siteName,
+    template: `%s | ${siteConfig.siteName}`,
+  },
+  description: siteConfig.description,
 };
-
-export async function generateMetadata(): Promise<Metadata> {
-  const settings = await client.fetch<SiteSettings>(siteSettingsQuery);
-  return {
-    title: {
-      default: settings?.siteName ?? "Latten Creative",
-      template: `%s | ${settings?.siteName ?? "Latten Creative"}`,
-    },
-    description:
-      "We design & build modern digital experiences that elevate your brand.",
-  };
-}
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await client.fetch<SiteSettings>(siteSettingsQuery);
-
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${plusJakarta.variable}`}>
       <body>
         <Header
-          siteName={settings?.siteName}
-          navigation={settings?.navigation}
-          ctaButton={settings?.ctaButton}
+          siteName={siteConfig.siteName}
+          navigation={siteConfig.nav}
+          ctaButton={siteConfig.ctaButton}
         />
         {children}
         <Footer
-          siteName={settings?.siteName}
-          footerText={settings?.footerText}
-          navigation={settings?.navigation}
-          socialLinks={settings?.socialLinks}
-          contactEmail={settings?.contactEmail}
+          siteName={siteConfig.siteName}
+          footerText={siteConfig.footerText}
+          navigation={siteConfig.nav}
+          socialLinks={siteConfig.socialLinks}
+          contactEmail={siteConfig.contactEmail}
         />
       </body>
     </html>

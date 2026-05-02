@@ -1,3 +1,28 @@
+/* ─── Packages ─── */
+export interface Package {
+  id: string;
+  title: string;
+  slug: string;
+  category: 'website' | 'bundle' | 'maintenance' | 'marketing';
+  tagline: string | null;
+  price_label: string;
+  price_min: number | null;
+  price_max: number | null;
+  price_exact: number | null;
+  is_monthly: boolean;
+  deposit_percent: number;
+  summary: string | null;
+  description: string | null;
+  features: string[];
+  ideal_for: string[];
+  cta_copy: string | null;
+  cta_button_text: string | null;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 /* ─── Bookings ─── */
 export interface Booking {
   id: string;

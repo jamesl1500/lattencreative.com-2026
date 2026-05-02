@@ -1,8 +1,9 @@
 @use 'variables' as *;
 
 .footer {
-  border-top: 1px solid $color-border;
-  background: $color-surface;
+  border-top: 1px solid var(--color-border);
+  background: rgba(7, 10, 14, 0.72);
+  backdrop-filter: blur(6px);
   padding: 4.5rem 1.5rem 2rem;
 
   @media (max-width: 768px) {
@@ -16,6 +17,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 3rem;
+  padding: 0 1.4rem;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -28,13 +30,14 @@
     font-size: 1.2rem;
     font-weight: 800;
     margin-bottom: 0.75rem;
-    color: $color-fg;
+    color: var(--color-fg);
+    font-family: var(--font-display);
     span {
-      color: $color-accent;
+      color: var(--color-accent);
     }
   }
   p {
-    color: $color-muted;
+    color: var(--color-muted);
     line-height: 1.7;
     font-size: 0.9rem;
     max-width: 32ch;
@@ -47,7 +50,7 @@
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-weight: 700;
-    color: $color-fg;
+    color: var(--color-fg);
     margin-bottom: 1rem;
   }
   ul {
@@ -58,11 +61,11 @@
     gap: 0.5rem;
   }
   a {
-    color: $color-muted;
+    color: var(--color-muted);
     font-size: 0.9rem;
     transition: color $transition;
     &:hover {
-      color: $color-accent;
+      color: var(--color-accent);
     }
   }
 }
@@ -71,12 +74,12 @@
   max-width: $max-width;
   margin: 3rem auto 0;
   padding-top: 1.5rem;
-  border-top: 1px solid $color-border;
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
-  color: $color-muted;
+  color: var(--color-muted);
 
   @media (max-width: 480px) {
     flex-direction: column;
@@ -89,10 +92,10 @@
   display: flex;
   gap: 1rem;
   a {
-    color: $color-muted;
+    color: var(--color-muted);
     transition: color $transition;
     &:hover {
-      color: $color-accent;
+      color: var(--color-accent);
     }
   }
 }

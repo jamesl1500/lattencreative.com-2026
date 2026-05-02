@@ -42,6 +42,39 @@ export async function POST(req: NextRequest) {
             )
         }
 
+        if (!booking.package_id) {
+            return NextResponse.json(
+                { error: 'Booking package is missing' },
+                { status: 400 }
+            )
+        }
+
+        // Re-fetch package to verify authoritative price/deposit data.
+        const { data: pkg, error: pkgError } = await supabase
+            .from('packages')
+            .select('id, slug, title, price_exact, price_min, deposit_percent')
+            .eq('id', booking.package_id)
+            .single()
+
+        if (pkgError || !pkg) {
+            console.error('[checkout] Package fetch error:', pkgError)
+            return NextResponse.json(
+                { error: 'Package not found for this booking' },
+                { status: 404 }
+            )
+        }
+
+        const packagePrice = pkg.price_exact ?? pkg.price_min ?? 0
+        const depositPercent = Number(pkg.deposit_percent || 50)
+        const expectedDeposit = Math.round(packagePrice * (depositPercent / 100))
+
+        if (packagePrice <= 0 || depositPercent <= 0 || depositPercent > 100 || expectedDeposit <= 0) {
+            return NextResponse.json(
+                { error: 'Package pricing is invalid' },
+                { status: 400 }
+            )
+        }
+
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'
 
         // Create Stripe Checkout Session
@@ -54,17 +87,18 @@ export async function POST(req: NextRequest) {
                     price_data: {
                         currency: 'usd',
                         product_data: {
-                            name: `${booking.package_title} — 50% Deposit`,
-                            description: `Deposit to secure your ${booking.package_title} project with Latten Creative. Meeting scheduled for ${booking.preferred_date} at ${booking.preferred_time}.`,
+                            name: `${pkg.title} — ${depositPercent}% Deposit`,
+                            description: `Deposit to secure your ${pkg.title} project with Latten Creative.`,
                         },
-                        unit_amount: booking.deposit_amount, // already in cents
+                        unit_amount: expectedDeposit,
                     },
                     quantity: 1,
                 },
             ],
             metadata: {
                 booking_id: bookingId,
-                package_slug: booking.package_slug,
+                package_id: pkg.id,
+                package_slug: pkg.slug,
             },
             success_url: `${appUrl}/book/success?session_id={CHECKOUT_SESSION_ID}&booking_id=${bookingId}`,
             cancel_url: `${appUrl}/book/cancelled?booking_id=${bookingId}`,
@@ -74,6 +108,10 @@ export async function POST(req: NextRequest) {
         await supabase
             .from('bookings')
             .update({
+                package_slug: pkg.slug,
+                package_title: pkg.title,
+                package_price: packagePrice,
+                deposit_amount: expectedDeposit,
                 stripe_checkout_session_id: session.id,
                 status: 'confirmed',
             })

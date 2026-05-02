@@ -8,8 +8,9 @@ import styles from '@/styles/sections/Booking.module.scss'
    Types
    ────────────────────────────────────────────── */
 interface PackageData {
+    id: string
     title: string
-    slug: { current: string }
+    slug: string
     price: number            // cents
     depositPercent: number   // 1-100
     priceLabel?: string
@@ -62,6 +63,7 @@ export default function BookingForm({ pkg }: BookingFormProps) {
 
     const depositAmount = Math.round(pkg.price * (pkg.depositPercent / 100))
     const currentStepIndex = STEPS.indexOf(step)
+    const progressPercent = (currentStepIndex / (STEPS.length - 1)) * 100
 
     const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? ''
 
@@ -118,10 +120,7 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                     customerEmail,
                     customerPhone: customerPhone || undefined,
                     companyName: companyName || undefined,
-                    packageSlug: pkg.slug.current,
-                    packageTitle: pkg.title,
-                    packagePrice: pkg.price,
-                    depositAmount,
+                    packageId: pkg.id,
                     calendlyEventUri,
                     calendlyInviteeUri,
                     projectDescription,
@@ -169,12 +168,20 @@ export default function BookingForm({ pkg }: BookingFormProps) {
         <div className={styles.bookingPage}>
             <div className={styles.bookingContainer}>
                 {/* Back link */}
-                <a href={`/packages/${pkg.slug.current}`} className={styles.backLink}>
+                <a href={`/packages/${pkg.id}`} className={styles.backLink}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                     Back to {pkg.title}
                 </a>
+
+                <header className={styles.bookingIntro}>
+                    <h1>Book Your {pkg.title} Package</h1>
+                    <p>
+                        Complete these steps to schedule your call and secure your project with
+                        a deposit. You can review everything before payment.
+                    </p>
+                </header>
 
                 {/* Package banner */}
                 <div className={styles.packageBanner}>
@@ -195,9 +202,22 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                 </div>
 
                 {/* Stepper */}
+                <div className={styles.progressWrap}>
+                    <div className={styles.progressTrack}>
+                        <div
+                            className={styles.progressFill}
+                            style={{ width: `${progressPercent}%` }}
+                        />
+                    </div>
+                </div>
+
                 <div className={styles.stepper}>
                     {STEPS.map((s, i) => (
-                        <div key={s} className={styles.stepItem}>
+                        <div
+                            key={s}
+                            className={styles.stepItem}
+                            style={{ animationDelay: `${i * 70}ms` }}
+                        >
                             <div
                                 className={[
                                     i < currentStepIndex
@@ -212,15 +232,13 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                                 <div className={styles.stepCircle}>
                                     {i < currentStepIndex ? '✓' : i + 1}
                                 </div>
-                                <span className={styles.stepLabel}>{STEP_LABELS[s]}</span>
+                                <div className={styles.stepTextWrap}>
+                                    <span className={styles.stepLabel}>{STEP_LABELS[s]}</span>
+                                    {i === currentStepIndex && (
+                                        <span className={styles.stepHint}>Current Step</span>
+                                    )}
+                                </div>
                             </div>
-                            {i < STEPS.length - 1 && (
-                                <div
-                                    className={`${styles.stepDivider} ${
-                                        i < currentStepIndex ? styles.stepDividerActive : ''
-                                    }`}
-                                />
-                            )}
                         </div>
                     ))}
                 </div>

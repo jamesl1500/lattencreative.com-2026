@@ -56,6 +56,7 @@ export default function Footer({
                         {contactEmail && (
                             <li><a href={`mailto:${contactEmail}`}>{contactEmail}</a></li>
                         )}
+                        <li><a href="tel:2168897822">216-889-7822</a></li>
                         {socialLinks.map((s) => (
                             <li key={s.platform}>
                                 <a href={s.url} target="_blank" rel="noopener noreferrer">
