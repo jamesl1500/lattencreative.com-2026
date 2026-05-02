@@ -99,21 +99,71 @@
 .mobileToggle {
   display: none;
   background: none;
-  border: none;
+  border: 1px solid var(--color-border);
   color: var(--color-fg);
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+  line-height: 1;
   cursor: pointer;
-  padding: 0.25rem;
-  border-radius: $radius-sm;
-  transition: background $transition;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.55rem;
+  transition: background $transition, border-color $transition;
 
   &:hover {
     background: rgba(255, 255, 255, 0.08);
+    border-color: var(--color-border-strong);
   }
 
   @media (max-width: 768px) {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+.mobileNav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileNav {
+    display: grid;
+    gap: 0.5rem;
+    border-top: 1px solid var(--color-border);
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: max-height .28s ease, opacity .2s ease, transform .25s ease, padding .2s ease;
+    background: rgba(7, 10, 14, 0.95);
+  }
+
+  .mobileNavOpen {
+    max-height: 22rem;
+    opacity: 1;
+    transform: translateY(0);
+    padding: 0.8rem 1rem 1rem;
+  }
+
+  .mobileNavLink {
+    display: block;
+    padding: 0.65rem 0.2rem;
+    color: var(--color-fg);
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mobileCtaBtn {
+    margin-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.6rem;
+    border-radius: 0.72rem;
+    background: linear-gradient(120deg, var(--color-accent), var(--color-accent-soft));
+    color: #161616;
+    font-weight: 700;
+    font-size: 0.9rem;
   }
 }

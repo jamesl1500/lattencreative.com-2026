@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from 'react'
 import Link from 'next/link'
 import styles from '@/styles/Header.module.scss'
 
@@ -11,8 +14,11 @@ type HeaderProps = {
 }
 
 export default function Header({ siteName, navigation = [], ctaButton }: HeaderProps) {
+    const [mobileOpen, setMobileOpen] = useState(false)
     const ctaLabel = ctaButton?.text ?? ctaButton?.label
     const ctaHref = ctaButton?.link ?? ctaButton?.href ?? '/contact'
+
+    const closeMobile = () => setMobileOpen(false)
 
     return (
         <header className={styles.header}>
@@ -34,10 +40,33 @@ export default function Header({ siteName, navigation = [], ctaButton }: HeaderP
                     )}
                 </nav>
 
-                <button className={styles.mobileToggle} aria-label="Menu">
-                    &#9776;
+                <button
+                    className={styles.mobileToggle}
+                    aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={mobileOpen}
+                    aria-controls="mobile-nav"
+                    onClick={() => setMobileOpen((prev) => !prev)}
+                >
+                    {mobileOpen ? '✕' : '☰'}
                 </button>
             </div>
+
+            <nav
+                id="mobile-nav"
+                className={`${styles.mobileNav} ${mobileOpen ? styles.mobileNavOpen : ''}`}
+                aria-hidden={!mobileOpen}
+            >
+                {navigation.map((item) => (
+                    <Link key={item.href} href={item.href} className={styles.mobileNavLink} onClick={closeMobile}>
+                        {item.label}
+                    </Link>
+                ))}
+                {ctaLabel && (
+                    <Link href={ctaHref} className={styles.mobileCtaBtn} onClick={closeMobile}>
+                        {ctaLabel}
+                    </Link>
+                )}
+            </nav>
         </header>
     )
 }
