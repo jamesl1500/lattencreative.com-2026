@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useCallback } from 'react'
+import { InlineWidget, useCalendlyEventListener } from 'react-calendly'
 import styles from '@/styles/sections/Booking.module.scss'
 
 /* ──────────────────────────────────────────────
@@ -20,57 +20,18 @@ interface BookingFormProps {
     pkg: PackageData
 }
 
-type Step = 'schedule' | 'project' | 'info' | 'review'
-const STEPS: Step[] = ['schedule', 'project', 'info', 'review']
+type Step = 'info' | 'schedule' | 'project' | 'review'
+const STEPS: Step[] = ['info', 'schedule', 'project', 'review']
 const STEP_LABELS: Record<Step, string> = {
+    info: 'Your Info',
     schedule: 'Schedule',
     project: 'Project',
-    info: 'Your Info',
     review: 'Review',
 }
 
 /* ──────────────────────────────────────────────
-   Helpers: generate next 14 weekdays
+   Helpers
    ────────────────────────────────────────────── */
-function getAvailableDates(): Date[] {
-    const dates: Date[] = []
-    const today = new Date()
-    // Start from 2 days ahead to give buffer
-    const start = new Date(today)
-    start.setDate(start.getDate() + 2)
-
-    let cursor = new Date(start)
-    while (dates.length < 14) {
-        const day = cursor.getDay()
-        if (day !== 0 && day !== 6) {
-            dates.push(new Date(cursor))
-        }
-        cursor.setDate(cursor.getDate() + 1)
-    }
-    return dates
-}
-
-const TIME_SLOTS = [
-    '9:00 AM', '9:30 AM',
-    '10:00 AM', '10:30 AM',
-    '11:00 AM', '11:30 AM',
-    '1:00 PM', '1:30 PM',
-    '2:00 PM', '2:30 PM',
-    '3:00 PM', '3:30 PM',
-    '4:00 PM', '4:30 PM',
-]
-
-function formatDate(d: Date): string {
-    return d.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-    })
-}
-
-function formatDay(d: Date): string {
-    return d.toLocaleDateString('en-US', { weekday: 'short' })
-}
-
 function formatCurrency(cents: number): string {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -82,14 +43,15 @@ function formatCurrency(cents: number): string {
    Component
    ────────────────────────────────────────────── */
 export default function BookingForm({ pkg }: BookingFormProps) {
-    const router = useRouter()
-    const [step, setStep] = useState<Step>('schedule')
+    const [step, setStep] = useState<Step>('info')
     const [error, setError] = useState<string | null>(null)
     const [submitting, setSubmitting] = useState(false)
 
+    // Calendly state
+    const [calendlyEventUri, setCalendlyEventUri] = useState<string>('')
+    const [calendlyInviteeUri, setCalendlyInviteeUri] = useState<string>('')
+
     // Form state
-    const [selectedDate, setSelectedDate] = useState<string>('')
-    const [selectedTime, setSelectedTime] = useState<string>('')
     const [projectDescription, setProjectDescription] = useState('')
     const [projectGoals, setProjectGoals] = useState('')
     const [currentWebsite, setCurrentWebsite] = useState('')
@@ -98,27 +60,37 @@ export default function BookingForm({ pkg }: BookingFormProps) {
     const [customerPhone, setCustomerPhone] = useState('')
     const [companyName, setCompanyName] = useState('')
 
-    const dates = useMemo(() => getAvailableDates(), [])
     const depositAmount = Math.round(pkg.price * (pkg.depositPercent / 100))
     const currentStepIndex = STEPS.indexOf(step)
 
+    const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? ''
+
+    // Listen for Calendly event_scheduled and auto-advance
+    useCalendlyEventListener({
+        onEventScheduled: (e) => {
+            setCalendlyEventUri(e.data.payload.event.uri)
+            setCalendlyInviteeUri(e.data.payload.invitee.uri)
+            setStep('project')
+        },
+    })
+
     const canProceed = useCallback((): boolean => {
         switch (step) {
-            case 'schedule':
-                return !!selectedDate && !!selectedTime
-            case 'project':
-                return projectDescription.trim().length >= 10
             case 'info':
                 return (
                     customerName.trim().length >= 2 &&
                     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)
                 )
+            case 'schedule':
+                return !!calendlyEventUri
+            case 'project':
+                return projectDescription.trim().length >= 10
             case 'review':
                 return true
             default:
                 return false
         }
-    }, [step, selectedDate, selectedTime, projectDescription, customerName, customerEmail])
+    }, [step, customerName, customerEmail, calendlyEventUri, projectDescription])
 
     const nextStep = () => {
         setError(null)
@@ -150,9 +122,8 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                     packageTitle: pkg.title,
                     packagePrice: pkg.price,
                     depositAmount,
-                    preferredDate: selectedDate,
-                    preferredTime: selectedTime,
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    calendlyEventUri,
+                    calendlyInviteeUri,
                     projectDescription,
                     projectGoals: projectGoals || undefined,
                     currentWebsite: currentWebsite || undefined,
@@ -258,130 +229,15 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                 {error && <div className={styles.errorBanner}>{error}</div>}
 
                 {/* Form card */}
-                <div className={styles.formCard}>
-                    {/* ─── Step 1: Schedule ─── */}
-                    {step === 'schedule' && (
-                        <>
-                            <h2 className={styles.stepTitle}>Pick a Meeting Time</h2>
-                            <p className={styles.stepDescription}>
-                                Choose a date and time that works for you. We will send a confirmation 
-                                email with a link to join the call.
-                            </p>
+                <div className={step === 'schedule' ? styles.formCardWide : styles.formCard}>
 
-                            <div className={styles.fieldGroup}>
-                                <div className={styles.field}>
-                                    <label className={styles.label}>Date</label>
-                                    <div className={styles.dateGrid}>
-                                        {dates.map((d) => {
-                                            const iso = d.toISOString().split('T')[0]
-                                            const isSelected = selectedDate === iso
-                                            return (
-                                                <button
-                                                    key={iso}
-                                                    type="button"
-                                                    className={`${styles.dateOption} ${
-                                                        isSelected ? styles.dateOptionSelected : ''
-                                                    }`}
-                                                    onClick={() => setSelectedDate(iso)}
-                                                >
-                                                    <span className={styles.dateOptionDay}>
-                                                        {formatDay(d)}
-                                                    </span>
-                                                    <span className={styles.dateOptionDate}>
-                                                        {formatDate(d)}
-                                                    </span>
-                                                </button>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-
-                                {selectedDate && (
-                                    <div className={styles.field}>
-                                        <label className={styles.label}>Time</label>
-                                        <div className={styles.timeGrid}>
-                                            {TIME_SLOTS.map((t) => (
-                                                <button
-                                                    key={t}
-                                                    type="button"
-                                                    className={`${styles.timeOption} ${
-                                                        selectedTime === t
-                                                            ? styles.timeOptionSelected
-                                                            : ''
-                                                    }`}
-                                                    onClick={() => setSelectedTime(t)}
-                                                >
-                                                    {t}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </>
-                    )}
-
-                    {/* ─── Step 2: Project ─── */}
-                    {step === 'project' && (
-                        <>
-                            <h2 className={styles.stepTitle}>Tell Us About Your Project</h2>
-                            <p className={styles.stepDescription}>
-                                Help us understand what you are looking for so we can make the 
-                                most of our call together.
-                            </p>
-
-                            <div className={styles.fieldGroup}>
-                                <div className={styles.field}>
-                                    <label className={styles.label}>
-                                        Project Description <span className={styles.labelOptional}>*</span>
-                                    </label>
-                                    <textarea
-                                        className={styles.textarea}
-                                        placeholder="Describe what you need — a new website, a redesign, an app, etc."
-                                        value={projectDescription}
-                                        onChange={(e) => setProjectDescription(e.target.value)}
-                                        rows={4}
-                                    />
-                                </div>
-
-                                <div className={styles.field}>
-                                    <label className={styles.label}>
-                                        Goals & Outcomes{' '}
-                                        <span className={styles.labelOptional}>(optional)</span>
-                                    </label>
-                                    <textarea
-                                        className={styles.textarea}
-                                        placeholder="What do you want this project to achieve? More leads, better branding, etc."
-                                        value={projectGoals}
-                                        onChange={(e) => setProjectGoals(e.target.value)}
-                                        rows={3}
-                                    />
-                                </div>
-
-                                <div className={styles.field}>
-                                    <label className={styles.label}>
-                                        Current Website{' '}
-                                        <span className={styles.labelOptional}>(optional)</span>
-                                    </label>
-                                    <input
-                                        type="url"
-                                        className={styles.input}
-                                        placeholder="https://example.com"
-                                        value={currentWebsite}
-                                        onChange={(e) => setCurrentWebsite(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                        </>
-                    )}
-
-                    {/* ─── Step 3: Your Info ─── */}
+                    {/* ─── Step 1: Your Info ─── */}
                     {step === 'info' && (
                         <>
                             <h2 className={styles.stepTitle}>Your Information</h2>
                             <p className={styles.stepDescription}>
-                                We will use this to send you the meeting invite and booking 
-                                confirmation.
+                                Enter your details so we can send you the meeting invite and 
+                                booking confirmation.
                             </p>
 
                             <div className={styles.fieldGroup}>
@@ -440,6 +296,95 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                         </>
                     )}
 
+                    {/* ─── Step 2: Schedule via Calendly ─── */}
+                    {step === 'schedule' && (
+                        <>
+                            <h2 className={styles.stepTitle}>Pick a Meeting Time</h2>
+                            <p className={styles.stepDescription}>
+                                Choose a date and time that works for you. You will receive a 
+                                confirmation email with a calendar invite once scheduled.
+                            </p>
+
+                            {calendlyUrl ? (
+                                <InlineWidget
+                                    url={calendlyUrl}
+                                    prefill={{
+                                        name: customerName,
+                                        email: customerEmail,
+                                    }}
+                                    styles={{ minWidth: '320px', height: '700px' }}
+                                />
+                            ) : (
+                                <p className={styles.stepDescription} style={{ color: 'red' }}>
+                                    Calendly URL is not configured. Set NEXT_PUBLIC_CALENDLY_URL.
+                                </p>
+                            )}
+
+                            {calendlyEventUri && (
+                                <div className={styles.calendlyConfirmed}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Meeting scheduled — check your email for confirmation!
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {/* ─── Step 3: Project ─── */}
+                    {step === 'project' && (
+                        <>
+                            <h2 className={styles.stepTitle}>Tell Us About Your Project</h2>
+                            <p className={styles.stepDescription}>
+                                Help us understand what you are looking for so we can make the 
+                                most of our call together.
+                            </p>
+
+                            <div className={styles.fieldGroup}>
+                                <div className={styles.field}>
+                                    <label className={styles.label}>
+                                        Project Description <span className={styles.labelOptional}>*</span>
+                                    </label>
+                                    <textarea
+                                        className={styles.textarea}
+                                        placeholder="Describe what you need — a new website, a redesign, an app, etc."
+                                        value={projectDescription}
+                                        onChange={(e) => setProjectDescription(e.target.value)}
+                                        rows={4}
+                                    />
+                                </div>
+
+                                <div className={styles.field}>
+                                    <label className={styles.label}>
+                                        Goals & Outcomes{' '}
+                                        <span className={styles.labelOptional}>(optional)</span>
+                                    </label>
+                                    <textarea
+                                        className={styles.textarea}
+                                        placeholder="What do you want this project to achieve? More leads, better branding, etc."
+                                        value={projectGoals}
+                                        onChange={(e) => setProjectGoals(e.target.value)}
+                                        rows={3}
+                                    />
+                                </div>
+
+                                <div className={styles.field}>
+                                    <label className={styles.label}>
+                                        Current Website{' '}
+                                        <span className={styles.labelOptional}>(optional)</span>
+                                    </label>
+                                    <input
+                                        type="url"
+                                        className={styles.input}
+                                        placeholder="https://example.com"
+                                        value={currentWebsite}
+                                        onChange={(e) => setCurrentWebsite(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
+
                     {/* ─── Step 4: Review ─── */}
                     {step === 'review' && (
                         <>
@@ -453,22 +398,15 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                                 <div className={styles.reviewLabel}>Meeting</div>
                                 <div className={styles.reviewCard}>
                                     <div className={styles.reviewRow}>
-                                        <span className={styles.reviewKey}>Date</span>
-                                        <span className={styles.reviewValue}>
-                                            {new Date(selectedDate + 'T12:00:00').toLocaleDateString(
-                                                'en-US',
-                                                { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
-                                            )}
+                                        <span className={styles.reviewKey}>Status</span>
+                                        <span className={`${styles.reviewValue} ${styles.reviewValueSuccess}`}>
+                                            Scheduled via Calendly
                                         </span>
                                     </div>
                                     <div className={styles.reviewRow}>
-                                        <span className={styles.reviewKey}>Time</span>
-                                        <span className={styles.reviewValue}>{selectedTime}</span>
-                                    </div>
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewKey}>Timezone</span>
+                                        <span className={styles.reviewKey}>Confirmation</span>
                                         <span className={styles.reviewValue}>
-                                            {Intl.DateTimeFormat().resolvedOptions().timeZone}
+                                            Sent to {customerEmail}
                                         </span>
                                     </div>
                                 </div>
@@ -575,6 +513,22 @@ export default function BookingForm({ pkg }: BookingFormProps) {
                                     </>
                                 )}
                             </button>
+                        ) : step === 'schedule' ? (
+                            /* On schedule step, only show Continue once Calendly fires */
+                            calendlyEventUri ? (
+                                <button
+                                    type="button"
+                                    className={styles.btnNext}
+                                    onClick={nextStep}
+                                >
+                                    Continue
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="9 18 15 12 9 6" />
+                                    </svg>
+                                </button>
+                            ) : (
+                                <span />
+                            )
                         ) : (
                             <button
                                 type="button"

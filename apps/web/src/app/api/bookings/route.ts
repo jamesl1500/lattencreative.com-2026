@@ -16,9 +16,8 @@ interface BookingPayload {
     packageTitle: string
     packagePrice: number      // in cents
     depositAmount: number     // in cents
-    preferredDate: string     // ISO date string
-    preferredTime: string     // e.g. "10:00 AM"
-    timezone: string
+    calendlyEventUri: string  // e.g. https://api.calendly.com/scheduled_events/UUID
+    calendlyInviteeUri: string
     projectDescription: string
     projectGoals?: string
     currentWebsite?: string
@@ -29,9 +28,9 @@ export async function POST(req: NextRequest) {
         const body: BookingPayload = await req.json()
 
         // Basic validation
-        if (!body.customerName || !body.customerEmail || !body.packageSlug || !body.preferredDate || !body.preferredTime) {
+        if (!body.customerName || !body.customerEmail || !body.packageSlug || !body.calendlyEventUri) {
             return NextResponse.json(
-                { error: 'Missing required fields: customerName, customerEmail, packageSlug, preferredDate, preferredTime' },
+                { error: 'Missing required fields: customerName, customerEmail, packageSlug, calendlyEventUri' },
                 { status: 400 }
             )
         }
@@ -54,9 +53,8 @@ export async function POST(req: NextRequest) {
                 package_title: body.packageTitle,
                 package_price: body.packagePrice,
                 deposit_amount: body.depositAmount,
-                preferred_date: body.preferredDate,
-                preferred_time: body.preferredTime,
-                timezone: body.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+                calendly_event_uri: body.calendlyEventUri,
+                calendly_invitee_uri: body.calendlyInviteeUri || null,
                 project_description: body.projectDescription,
                 project_goals: body.projectGoals || null,
                 current_website: body.currentWebsite || null,

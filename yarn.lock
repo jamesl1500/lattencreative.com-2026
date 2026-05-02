@@ -8072,6 +8072,11 @@ rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-calendly@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/react-calendly/-/react-calendly-4.4.0.tgz"
+  integrity sha512-kMd8fEby0plL5aCebhjq9aesOJ6YWcmR3Pjs3bufncykrp7b6TryaCnWGoq4xZc/oipyudAVCIRgPVUjUEr8nQ==
+
 react-clientside-effect@^1.2.7:
   version "1.2.8"
   resolved "https://registry.npmjs.org/react-clientside-effect/-/react-clientside-effect-1.2.8.tgz"
